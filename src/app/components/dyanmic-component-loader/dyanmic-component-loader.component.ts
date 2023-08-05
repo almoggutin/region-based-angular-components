@@ -2,6 +2,8 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	ComponentRef,
+	DestroyRef,
 	Input,
 	OnDestroy,
 	OnInit,
@@ -10,6 +12,7 @@ import {
 	inject,
 } from '@angular/core';
 import { takeUntil, Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { LocalizationService } from 'src/app/services';
 
@@ -33,10 +36,12 @@ export class DyanmicComponentLoaderComponent implements OnInit, OnDestroy {
 
 	@Input({ required: true }) componentSelector!: ComponentSelector;
 	@Input() inputs!: Record<string, unknown>;
+	@Input() outputs!: Record<string, (value: any) => void>;
 
 	private destroy$: Subject<boolean> = new Subject<boolean>();
 
-	private componentRef!: any;
+	private componentRef!: ComponentRef<any>;
+	private componentRefDestroyRef!: DestroyRef;
 
 	ngOnInit(): void {
 		this.localizationService.region$
@@ -56,17 +61,33 @@ export class DyanmicComponentLoaderComponent implements OnInit, OnDestroy {
 		this.container.clear();
 
 		const componentRegionMap = COMPONENT_REGISTRY.get(this.componentSelector);
-		if (!componentRegionMap) throw new Error('DyanmicComponentLoader Error: Component selector was not found!');
+		if (!componentRegionMap) throw new Error('DyanmicComponentLoader Error: Component selector does not exist!');
 
 		const component = componentRegionMap.get(region);
-		if (!component) return;
+		if (!component) {
+			this.cdr.detectChanges();
+			return;
+		}
 
 		this.componentRef = this.container.createComponent(component);
+		this.componentRefDestroyRef = this.componentRef.injector.get(DestroyRef);
 
-		if (this.inputs)
+		if (this.inputs) {
 			Object.keys(this.inputs).forEach((key: string) => {
-				this.componentRef.instance[key] = this.inputs[key];
+				this.componentRef.setInput(key, this.inputs[key]);
 			});
+		}
+
+		if (this.outputs) {
+			Object.keys(this.outputs).forEach((key: string) => {
+				const output = this.componentRef.instance[key];
+				if (!output) return;
+
+				this.componentRef.instance[key]
+					.pipe(takeUntilDestroyed(this.componentRefDestroyRef))
+					.subscribe(this.outputs[key]);
+			});
+		}
 
 		this.cdr.detectChanges();
 	}

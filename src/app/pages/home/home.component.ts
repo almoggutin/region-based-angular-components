@@ -10,4 +10,8 @@ import { DyanmicComponentLoaderComponent } from 'src/app/components/dyanmic-comp
 	styleUrls: ['./home.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent {}
+export class HomeComponent {
+	handleClick(value: boolean): void {
+		console.log(value);
+	}
+}
