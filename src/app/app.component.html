@@ -1,5 +1,16 @@
 <app-header></app-header>
 
 <main class="main">
+	<section class="buttons-container">
+		<button type="button" class="region-btn" (click)="handleRegionChange(Region.IL)">US</button>
+		<button type="button" class="region-btn" (click)="handleRegionChange(Region.US)">IL</button>
+	</section>
+
+	<h2 *ngIf="region$ | async as region" class="region">
+		<span>The current region is: </span>
+
+		<span>{{ region | uppercase }}</span>
+	</h2>
+
 	<router-outlet></router-outlet>
 </main>
