@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"region-based-components": {
+		"region-based-angular-components": {
 			"projectType": "application",
 			"schematics": {
 				"@schematics/angular:component": {
@@ -37,7 +37,7 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:browser",
 					"options": {
-						"outputPath": "dist/region-based-components",
+						"outputPath": "dist/region-based-angular-components",
 						"index": "src/index.html",
 						"main": "src/main.ts",
 						"polyfills": ["zone.js"],
@@ -84,10 +84,10 @@
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
 						"production": {
-							"browserTarget": "region-based-components:build:production"
+							"browserTarget": "region-based-angular-components:build:production"
 						},
 						"development": {
-							"browserTarget": "region-based-components:build:development"
+							"browserTarget": "region-based-angular-components:build:development"
 						}
 					},
 					"defaultConfiguration": "development"
@@ -95,7 +95,7 @@
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"browserTarget": "region-based-components:build"
+						"browserTarget": "region-based-angular-components:build"
 					}
 				},
 				"test": {
