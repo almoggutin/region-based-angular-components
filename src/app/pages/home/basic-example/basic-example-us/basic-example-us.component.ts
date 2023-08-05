@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-title-il',
+  selector: 'app-basic-example-us',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './title-il.component.html',
-  styleUrls: ['./title-il.component.scss'],
+  templateUrl: './basic-example-us.component.html',
+  styleUrls: ['./basic-example-us.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleIlComponent {
+export class BasicExampleUsComponent {
 
 }

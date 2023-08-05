@@ -1,4 +1,19 @@
-<h1 class="title">Basic Component example:</h1>
-<hr />
+<section>
+	<h1 class="title">Basic Component example:</h1>
+	<hr />
 
-<app-dyanmic-component-loader componentSelector="appTitle"></app-dyanmic-component-loader>
+	<app-dyanmic-component-loader componentSelector="appBasicExample"></app-dyanmic-component-loader>
+</section>
+
+<section>
+	<h1 class="title">Advanced Component example with inputs:</h1>
+	<hr />
+
+	<app-dyanmic-component-loader
+		componentSelector="appInputExample"
+		[inputs]="{
+			name: 'Almog Gutin',
+			age: 24
+		}"
+	></app-dyanmic-component-loader>
+</section>

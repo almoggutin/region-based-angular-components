@@ -1,5 +1,6 @@
 import {
 	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 	Component,
 	Input,
 	OnDestroy,
@@ -26,6 +27,7 @@ import { COMPONENT_REGISTRY } from 'src/app/constants';
 })
 export class DyanmicComponentLoaderComponent implements OnInit, OnDestroy {
 	private readonly localizationService = inject(LocalizationService);
+	private readonly cdr = inject(ChangeDetectorRef);
 
 	@ViewChild('container', { read: ViewContainerRef, static: true }) container!: ViewContainerRef;
 
@@ -61,9 +63,11 @@ export class DyanmicComponentLoaderComponent implements OnInit, OnDestroy {
 
 		this.componentRef = this.container.createComponent(component);
 
-		if (!this.inputs) return;
-		Object.keys(this.inputs).forEach((key: string) => {
-			this.componentRef.instance[key] = this.inputs[key];
-		});
+		if (this.inputs)
+			Object.keys(this.inputs).forEach((key: string) => {
+				this.componentRef.instance[key] = this.inputs[key];
+			});
+
+		this.cdr.detectChanges();
 	}
 }
