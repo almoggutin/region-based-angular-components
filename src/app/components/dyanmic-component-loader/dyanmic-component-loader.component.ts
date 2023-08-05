@@ -8,7 +8,7 @@ import {
 	ViewContainerRef,
 	inject,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntil, Subject } from 'rxjs';
 
 import { LocalizationService } from 'src/app/services';
 
@@ -32,15 +32,20 @@ export class DyanmicComponentLoaderComponent implements OnInit, OnDestroy {
 	@Input({ required: true }) componentSelector!: ComponentSelector;
 	@Input() inputs!: Record<string, unknown>;
 
+	private destroy$: Subject<boolean> = new Subject<boolean>();
+
 	private componentRef!: any;
 
 	ngOnInit(): void {
 		this.localizationService.region$
-			.pipe(takeUntilDestroyed())
+			.pipe(takeUntil(this.destroy$))
 			.subscribe((region: Region) => this.loadComponent(region));
 	}
 
 	ngOnDestroy(): void {
+		this.destroy$.next(true);
+		this.destroy$.unsubscribe();
+
 		if (!this.componentRef) return;
 		this.componentRef.destroy();
 	}
@@ -56,6 +61,7 @@ export class DyanmicComponentLoaderComponent implements OnInit, OnDestroy {
 
 		this.componentRef = this.container.createComponent(component);
 
+		if (!this.inputs) return;
 		Object.keys(this.inputs).forEach((key: string) => {
 			this.componentRef.instance[key] = this.inputs[key];
 		});
