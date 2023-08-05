@@ -1,0 +1,33 @@
+@import '/src/styles/colors';
+
+.main-header {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+
+	width: 100%;
+	min-height: 5rem;
+	padding: 1rem;
+
+	background-color: $primary-color;
+	color: $text-color;
+
+	@media (min-width: 1000px) {
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	.title {
+		text-align: center;
+	}
+
+	.navbar-items {
+		display: flex;
+		gap: 2rem;
+
+		color: $text-color;
+		font-size: 1.5rem;
+	}
+}
